@@ -2,20 +2,24 @@ const Gpio = require('pigpio').Gpio;
 const { CronJob } = require('cron');
 const { format: formatDate } = require('date-fns');
 
+const OPEN_POSITION = 1500;
+const CLOSE_POSITION = 1000;
+
 const log = (text) => {
   console.log(`[!] ${formatDate(new Date(), 'dd/MM/yyyy HH:mm:ss')}: ${text}`);
 };
 
 const motor = new Gpio(18, { mode: Gpio.OUTPUT });
+motor.servoWrite(CLOSE_POSITION);
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const open = () => {
-  motor.servoWrite(1500);
+  motor.servoWrite(OPEN_POSITION);
 };
 
 const close = () => {
-  motor.servoWrite(1000);
+  motor.servoWrite(CLOSE_POSITION);
 };
 
 const feedPet = async () => {
