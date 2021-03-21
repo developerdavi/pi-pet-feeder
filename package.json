@@ -1,0 +1,22 @@
+{
+  "name": "pi-pet-feeder",
+  "version": "1.0.0",
+  "description": "A Raspberry Pi powered pet feeder system",
+  "main": "src/index.js",
+  "repository": "git@github.com:developerdavi/pi-pet-feeder.git",
+  "author": "Davi Rodrigues <developer.davi@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "pm2 start ecosystem.config.js"
+  },
+  "dependencies": {
+    "date-fns": "^2.19.0",
+    "pigpio": "^3.3.0",
+    "pigpio-mock": "^0.0.1",
+    "pm2": "^4.5.5"
+  },
+  "devDependencies": {
+    "eslint": "^7.22.0"
+  }
+}
