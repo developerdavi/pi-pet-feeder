@@ -1,35 +1,23 @@
-const Gpio = require('pigpio').Gpio;
-const { CronJob } = require('cron');
-const { format: formatDate } = require('date-fns');
+const express = require('express');
+const http = require('http');
+const cors = require('cors');
+const log = require('./helpers/log');
+const config = require('./config');
+const router = require('./routes');
+const logMiddleware = require('./helpers/logMiddleware');
 
-const OPEN_POSITION = 1500;
-const CLOSE_POSITION = 1000;
+require('./services/init');
+require('./crons');
 
-const log = (text) => {
-  console.log(`[!] ${formatDate(new Date(), 'dd/MM/yyyy HH:mm:ss')}: ${text}`);
-};
+const app = express();
+const server = new http.Server(app);
+const port = config.PORT;
 
-const motor = new Gpio(18, { mode: Gpio.OUTPUT });
-motor.servoWrite(CLOSE_POSITION);
+app.use(express.json());
+app.use(logMiddleware);
+app.use(cors());
+app.use(router);
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const open = () => {
-  motor.servoWrite(OPEN_POSITION);
-};
-
-const close = () => {
-  motor.servoWrite(CLOSE_POSITION);
-};
-
-const feedPet = async () => {
-  log('Feeding...');
-  open();
-  await delay(500);
-  close();
-};
-
-new CronJob('0 9 * * *', feedPet).start();
-new CronJob('0 18 * * *', feedPet).start();
-
-log('Pet feeder started');
+server.listen(port, () => {
+  log(`Pet feeder started. Running server on port ${port}`);
+});
